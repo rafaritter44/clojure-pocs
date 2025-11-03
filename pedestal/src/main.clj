@@ -49,5 +49,12 @@
   (stop)
   (start))
 
+(defn- test-request [verb url]
+  (test/response-for @*connector verb url))
+
 (comment
-  (main/start))
+  (main/start)
+  (test-request :get "/todo")
+  (dissoc *1 :body)
+  (test-request :get "/does-not-exist")
+  (test-request :get "/todo/abcdef/12345"))
