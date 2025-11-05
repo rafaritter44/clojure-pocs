@@ -109,6 +109,15 @@
              (assoc-in [:request :path-params :item-id] item-id)))
        context))})
 
+(def list-item-update
+  {:name :list-item-update
+   :enter
+   (fn [context]
+     (let [list-id (get-in context [:request :path-params :list-id])
+           item-id (get-in context [:request :path-params :item-id])]
+       (assoc context
+              :response (ok {:message (str "Updated item " item-id " in list " list-id)}))))})
+
 (def routes
   #{["/todo" :post [db-interceptor list-create]]
     ["/todo" :get echo :route-name :list-query-form]
