@@ -28,9 +28,12 @@
   {:name  list-name
    :items {}})
 
-(defn- make-list-item [item-name]
-  {:name  item-name
-   :done? false})
+(defn- make-list-item
+  ([item-name]
+   (make-list-item item-name false))
+  ([item-name done?]
+   {:name  item-name
+    :done? done?}))
 
 (def echo
   {:name  :echo
@@ -103,13 +106,21 @@
                     (assoc-in [:request :path-params :item-id] item-id)))
               context))})
 
+(defn- list-item-update-fn
+  [dbval list-id item-id updated-item]
+  (if (and (contains? dbval list-id)
+           (get-in dbval [list-id :items item-id]))
+    (assoc-in dbval [list-id :items item-id] updated-item)
+    dbval))
+
 (def list-item-update
   {:name  :list-item-update
    :enter (fn [context]
-            (let [list-id (get-in context [:request :path-params :list-id])
-                  item-id (get-in context [:request :path-params :item-id])]
+            (let [{:keys [list-id item-id]} (get-in context [:request :path-params])
+                  {:keys [name done]}       (get-in context [:request :query-params])
+                  updated-item              (make-list-item name (parse-boolean done))]
               (assoc context
-                     :response (ok {:message (str "Updated item " item-id " in list " list-id)}))))})
+                     :tx-data [list-item-update-fn list-id item-id updated-item])))})
 
 (def routes
   #{["/todo" :post [db-interceptor list-create]]
@@ -117,7 +128,7 @@
     ["/todo/:list-id" :get [entity-render db-interceptor list-view]]
     ["/todo/:list-id" :post [entity-render list-item-view db-interceptor list-item-create]]
     ["/todo/:list-id/:item-id" :get [entity-render db-interceptor list-item-view]]
-    ["/todo/:list-id/:item-id" :put echo :route-name :list-item-update]
+    ["/todo/:list-id/:item-id" :put [entity-render list-item-view db-interceptor list-item-update]]
     ["/todo/:list-id/:item-id" :delete echo :route-name :list-item-delete]})
 
 (defn- create-connector []
@@ -152,9 +163,9 @@
   (test-request :get "/todo")
   (dissoc *1 :body)
   (test-request :get "/does-not-exist")
-  (test-request :get "/todo/l26478")
-  (test-request :post "/todo/l26478")
-  (test-request :get "/todo/l26478/i26481")
-  (test-request :put "/todo/l26478/i26481")
-  (test-request :delete "/todo/l26478/i26481")
+  (test-request :get "/todo/l26356")
+  (test-request :post "/todo/l26356")
+  (test-request :get "/todo/l26356/i26361")
+  (test-request :put "/todo/l26356/i26361?name=Updated+Item&done=true")
+  (test-request :delete "/todo/l26356/i26361")
   )
