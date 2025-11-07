@@ -2,7 +2,8 @@
   (:require [io.pedestal.connector :as conn]
             [io.pedestal.http.http-kit :as hk]
             [io.pedestal.http.route :as route]
-            [io.pedestal.connector.test :as test]))
+            [io.pedestal.connector.test :as test]
+            [clojure.edn :as edn]))
 
 (defn- response [status body & {:as headers}]
   {:status  status
@@ -58,7 +59,7 @@
 
 (def list-view
   {:name  :list-view
-   :enter (fn [context]
+   :leave (fn [context]
             (let [db-id    (get-in context [:request :path-params :list-id])
                   the-list (when db-id
                              (find-list-by-id
@@ -122,14 +123,29 @@
               (assoc context
                      :tx-data [list-item-update-fn list-id item-id updated-item])))})
 
+(defn- list-item-delete-fn
+  [dbval list-id item-id]
+  (if (and (contains? dbval list-id)
+           (get-in dbval [list-id :items item-id]))
+    (update-in dbval [list-id :items] dissoc item-id)
+    dbval))
+
+(def list-item-delete
+  {:name  :list-item-delete
+   :enter (fn [context]
+            (let [{:keys [list-id item-id]} (get-in context [:request :path-params])]
+              (assoc context
+                     :tx-data [list-item-delete-fn list-id item-id])))})
+
 (def routes
-  #{["/todo" :post [db-interceptor list-create]]
+  #{["/echo" :get echo]
+    ["/todo" :post [db-interceptor list-create]]
     ["/todo" :get echo :route-name :list-query-form]
     ["/todo/:list-id" :get [entity-render db-interceptor list-view]]
     ["/todo/:list-id" :post [entity-render list-item-view db-interceptor list-item-create]]
     ["/todo/:list-id/:item-id" :get [entity-render db-interceptor list-item-view]]
     ["/todo/:list-id/:item-id" :put [entity-render list-item-view db-interceptor list-item-update]]
-    ["/todo/:list-id/:item-id" :delete echo :route-name :list-item-delete]})
+    ["/todo/:list-id/:item-id" :delete [entity-render list-view db-interceptor list-item-delete]]})
 
 (defn- create-connector []
   (-> (conn/default-connector-map 8890)
@@ -159,13 +175,19 @@
   (main/start)
   (main/stop)
   (main/restart)
-  (test-request :post "/todo")
-  (test-request :get "/todo")
-  (dissoc *1 :body)
   (test-request :get "/does-not-exist")
-  (test-request :get "/todo/l26356")
-  (test-request :post "/todo/l26356")
-  (test-request :get "/todo/l26356/i26361")
-  (test-request :put "/todo/l26356/i26361?name=Updated+Item&done=true")
-  (test-request :delete "/todo/l26356/i26361")
+  (test-request :post "/todo")
+  (test-request :post (get-in *1 [:headers "Location"]))
+  (test-request :get (get-in *2 [:headers "Location"]))
+  (test-request :put (str
+                      (get-in *3 [:headers "Location"])
+                      "/"
+                      (-> *1 :body edn/read-string :items keys first)
+                      "?name=Updated+Item&done=true"))
+  (test-request :get "/todo")
+  (test-request :get (str
+                      (get-in *3 [:headers "Location"])
+                      "/"
+                      (-> *1 :body edn/read-string :items keys first)))
+  (test-request :delete "/todo/l26302/i26398")
   )
