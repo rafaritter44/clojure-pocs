@@ -43,6 +43,12 @@
                   response (ok request)]
               (assoc context :response response)))})
 
+(def lists-view
+  {:name  :lists-view
+   :leave (fn [context]
+            (let [dbval (get-in context [:request :database])]
+              (assoc context :result dbval)))})
+
 (def list-create
   {:name  :list-create
    :enter (fn [context]
@@ -139,8 +145,8 @@
 
 (def routes
   #{["/echo" :get echo]
+    ["/todo" :get [entity-render db-interceptor lists-view]]
     ["/todo" :post [db-interceptor list-create]]
-    ["/todo" :get echo :route-name :list-query-form]
     ["/todo/:list-id" :get [entity-render db-interceptor list-view]]
     ["/todo/:list-id" :post [entity-render list-item-view db-interceptor list-item-create]]
     ["/todo/:list-id/:item-id" :get [entity-render db-interceptor list-item-view]]
@@ -172,9 +178,10 @@
   (test/response-for @*connector verb url))
 
 (comment
-  (main/start)
-  (main/stop)
-  (main/restart)
+  (start)
+  (stop)
+  (restart)
+  (reset! *database {})
   (test-request :get "/does-not-exist")
   (test-request :post "/todo")
   (test-request :post (get-in *1 [:headers "Location"]))
@@ -185,9 +192,12 @@
                       (-> *1 :body edn/read-string :items keys first)
                       "?name=Updated+Item&done=true"))
   (test-request :get "/todo")
-  (test-request :get (str
-                      (get-in *3 [:headers "Location"])
-                      "/"
-                      (-> *1 :body edn/read-string :items keys first)))
-  (test-request :delete "/todo/l26302/i26398")
+  (test-request :get (let [dbval   (-> *1 :body edn/read-string)
+                           list-id (first (keys dbval))
+                           item-id (first (keys (get-in dbval [list-id :items])))]
+                       (str "/todo/" list-id "/" item-id)))
+  (test-request :delete (let [dbval   (-> *2 :body edn/read-string)
+                              list-id (first (keys dbval))
+                              item-id (first (keys (get-in dbval [list-id :items])))]
+                          (str "/todo/" list-id "/" item-id)))
   )
