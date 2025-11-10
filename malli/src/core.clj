@@ -7,7 +7,7 @@
 (def Address
   [:map
    [:street :string]
-   [:country [:enum "FI" "UA"]]])
+   [:country [:enum "IT" "VA"]]])
 
 (def User
   [:map
