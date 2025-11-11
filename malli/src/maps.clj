@@ -19,3 +19,15 @@
   :y 2
   1  1
   2  2})
+
+;; default branching can be arbitrarily nested
+(m/validate
+ [:map
+  [:x :int]
+  [::m/default [:map
+                [:y :int]
+                [::m/default [:map-of :int :int]]]]]
+ {:x 1
+  :y 2
+  1  1
+  2  2})
