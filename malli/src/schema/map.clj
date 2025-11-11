@@ -1,4 +1,4 @@
-(ns maps
+(ns schema.map
   (:require [malli.core :as m]))
 
 ;; homogeneous map
