@@ -18,4 +18,10 @@ insert into address (name, email)
   values ('Rafael', 'rafael@email.com')
 "])
   (jdbc/execute! ds ["select * from address"])
+
+  (jdbc/execute-one! ds ["
+insert into address (name, email)
+  values ('Someone Else', 'some@elsewhere.com')
+"] {:return-keys true})
+  (jdbc/execute-one! ds ["select * from address where id = ?" 2])
   )
