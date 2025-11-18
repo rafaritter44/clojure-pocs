@@ -1,5 +1,6 @@
 (ns core
-  (:require [next.jdbc :as jdbc]))
+  (:require [next.jdbc :as jdbc]
+            [next.jdbc.result-set :as rs]))
 
 (def db {:dbtype "h2"
          :dbname "example"})
@@ -24,4 +25,11 @@ insert into address (name, email)
   values ('Someone Else', 'some@elsewhere.com')
 "] {:return-keys true})
   (jdbc/execute-one! ds ["select * from address where id = ?" 2])
+
+  (jdbc/execute-one! ds ["
+insert into address (name, email)
+  values ('Someone Else', 'some@elsewhere.com')
+"] {:return-keys true :builder-fn rs/as-unqualified-lower-maps})
+  (jdbc/execute-one! ds ["select * from address where id = ?" 3]
+                     {:builder-fn rs/as-unqualified-lower-maps})
   )
