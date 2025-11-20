@@ -65,4 +65,11 @@
                 (:unit_count row))))
    0
    (jdbc/plan ds ["select * from invoice where customer_id = ?" 100]))
+
+  ;; transduce
+  (transduce
+   (map #(* (:unit_price %) (:unit_count %)))
+   +
+   0
+   (jdbc/plan ds ["select * from invoice where customer_id = ?" 100]))
   )
