@@ -2,12 +2,13 @@
   (:require [next.jdbc :as jdbc]
             [next.jdbc.result-set :as rs]))
 
+;; jdbc/get-datasource
 (def db {:dbtype "h2"
          :dbname "example"})
-
 (defonce ds (jdbc/get-datasource db))
 
 (comment
+  ;; jdbc/execute!
   (jdbc/execute! ds ["
     create table address (
       id int auto_increment primary key,
@@ -20,12 +21,14 @@
     "])
   (jdbc/execute! ds ["select * from address"])
 
+  ;; jdbc/execute-one!
   (jdbc/execute-one! ds ["
     insert into address (name, email)
       values ('Someone Else', 'some@elsewhere.com')
     "] {:return-keys true})
   (jdbc/execute-one! ds ["select * from address where id = ?" 2])
 
+  ;; :builder-fn
   (jdbc/execute-one! ds ["
     insert into address (name, email)
       values ('Someone Else', 'some@elsewhere.com')
@@ -33,6 +36,7 @@
   (jdbc/execute-one! ds ["select * from address where id = ?" 3]
                      {:builder-fn rs/as-unqualified-lower-maps})
 
+  ;; jdbc/with-options
   (def ds-opts (jdbc/with-options ds {:builder-fn rs/as-unqualified-lower-maps}))
   (jdbc/execute-one! ds-opts ["
     insert into address (name, email)
