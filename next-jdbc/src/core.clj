@@ -32,4 +32,6 @@ insert into address (name, email)
 "] {:return-keys true :builder-fn rs/as-unqualified-lower-maps})
   (jdbc/execute-one! ds ["select * from address where id = ?" 3]
                      {:builder-fn rs/as-unqualified-lower-maps})
+
+  (def ds-opts (jdbc/with-options ds {:builder-fn rs/as-unqualified-lower-maps}))
   )
