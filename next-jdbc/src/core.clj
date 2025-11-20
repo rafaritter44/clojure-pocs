@@ -43,4 +43,26 @@
       values ('Someone Else', 'some@elsewhere.com')
     "] {:return-keys true})
   (jdbc/execute-one! ds-opts ["select * from address where id = ?" 4])
+
+  ;; jdbc/plan
+  (jdbc/execute-one! ds ["
+    create table invoice (
+      id int auto_increment primary key,
+      product varchar(32),
+      unit_price decimal(10, 2),
+      unit_count int,
+      customer_id int
+    )"])
+  (jdbc/execute-one! ds ["
+    insert into invoice (product, unit_price, unit_count, customer_id)
+    values ('apple', 0.99, 6, 100),
+           ('banana', 1.25, 3, 100),
+           ('cucumber', 2.49, 2, 100)
+    "])
+  (reduce
+   (fn [cost row]
+     (+ cost (* (:unit_price row)
+                (:unit_count row))))
+   0
+   (jdbc/plan ds ["select * from invoice where customer_id = ?" 100]))
   )
