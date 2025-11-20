@@ -72,4 +72,12 @@
    +
    0
    (jdbc/plan ds ["select * from invoice where customer_id = ?" 100]))
+
+  ;; comp
+  (transduce
+   (comp (map (juxt :unit_price :unit_count))
+         (map #(apply * %)))
+   +
+   0
+   (jdbc/plan ds ["select * from invoice where customer_id = ?" 100]))
   )
