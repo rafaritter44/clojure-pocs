@@ -85,4 +85,9 @@
    +
    0
    (jdbc/plan ds ["select * from invoice where customer_id = ?" 100]))
+
+  ;; into
+  (into #{}
+        (map :product)
+        (jdbc/plan ds ["select * from invoice where customer_id = ?" 100]))
   )
