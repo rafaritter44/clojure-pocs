@@ -90,4 +90,8 @@
   (into #{}
         (map :product)
         (jdbc/plan ds ["select * from invoice where customer_id = ?" 100]))
+
+  ;; run!
+  (run! #(println (:product %))
+        (jdbc/plan ds ["select * from invoice where customer_id = ?" 100]))
   )
