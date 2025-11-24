@@ -56,4 +56,33 @@
   ;; run!
   (run! #(println (:product %))
         (jdbc/plan ds ["select * from invoice where customer_id = ?" 100]))
+
+  ;; select-keys (simple keywords)
+  (into []
+        (map #(select-keys % [:id :product :unit_price :unit_count :customer_id]))
+        (jdbc/plan ds ["select * from invoice where customer_id = ?" 100]))
+
+  ;; select-keys (qualified keywords)
+  (into []
+        (map #(select-keys % [:invoice/id :invoice/product
+                              :invoice/unit_price :invoice/unit_count
+                              :invoice/customer_id]))
+        (jdbc/plan ds ["select * from invoice where customer_id = ?" 100]))
+
+  ;; select-keys (qualified keywords, ignoring the table name)
+  (into []
+        (map #(select-keys % [:foo/id :bar/product
+                              :quux/unit_price :wibble/unit_count
+                              :blah/customer_id]))
+        (jdbc/plan ds ["select * from invoice where customer_id = ?" 100]))
+
+  ;; do not do this:
+  (into []
+        (map #(into {} %))
+        (jdbc/plan ds ["select * from invoice where customer_id = ?" 100]))
+
+  ;; rs/datafiable-row
+  (into []
+        (map #(rs/datafiable-row % ds {}))
+        (jdbc/plan ds ["select * from invoice where customer_id = ?" 100]))
   )
