@@ -34,4 +34,8 @@
   ;; sql/update!
   (sql/update! ds :address {:email "carlo@carloacutis.com"} {:name "Carlo"})
   (sql/update! ds :address {:email "acutis@carloacutis.com"} ["name = ?" "Carlo"])
+
+  ;; sql/delete!
+  (sql/delete! ds :address {:name "Niaj"})
+  (sql/delete! ds :address ["name = ?" "Mallory"])
   )
