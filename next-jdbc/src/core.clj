@@ -43,4 +43,12 @@
       values ('Someone Else', 'some@elsewhere.com')
     "] {:return-keys true})
   (jdbc/execute-one! ds-opts ["select * from address where id = ?" 4])
+
+  ;; jdbc/execute-batch!
+  (jdbc/execute-batch! ds
+                       "insert into address (name, email) values (?, ?)"
+                       [["Olivia" "olivia@email.com"]
+                        ["Peggy" "peggy@email.com"]
+                        ["Rupert" "rupert@email.com"]]
+                       {:return-keys true :return-generated-keys true})
   )
