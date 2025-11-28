@@ -27,4 +27,7 @@
      {:name "Mallory" :email "mallory@email.com"}
      {:name "Niaj" :email "niaj@email.com"}]
     {:batch true})
+
+  ;; sql/query
+  (sql/query ds ["select * from address where name = ?" "Carlo"])
   )
