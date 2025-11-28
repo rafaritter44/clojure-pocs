@@ -43,7 +43,8 @@
   (sql/find-by-keys ds :address {:name "Carlo" :email "carlo@carloacutis.com"})
   (sql/find-by-keys ds :address ["name = ? AND email = ?"
                                  "Carlo" "carlo@carloacutis.com"])
-  (sql/find-by-keys ds :address ["email LIKE ?" "%@email.com"])
+  (sql/find-by-keys ds :address ["email LIKE ?" "%@email.com"]
+                                 {:order-by [[:id :asc]]})
   (sql/find-by-keys ds :address ["name IN (?, ?, ?)" "Alice" "Bob" "Charlie"])
   (sql/find-by-keys ds :address {:name "Carlo"} {:columns [[:email :email_alias]]})
   (sql/find-by-keys ds :address {:name "Carlo"} {:columns [["count(*)" :n]]})
