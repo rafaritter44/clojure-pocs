@@ -1,0 +1,30 @@
+(ns sql
+  (:require [core :refer [ds]]
+            [next.jdbc.sql :as sql]))
+
+(comment
+  ;; sql/insert!
+  (sql/insert! ds :address {:name "Carlo" :email "carlo@miracolieucaristici.org"})
+
+  ;; sql/insert-multi!
+  (sql/insert-multi! ds :address
+    [:name :email]
+    [["Alice" "alice@email.com"]
+     ["Bob" "bob@email.com"]
+     ["Charlie" "charlie@email.com"]])
+  (sql/insert-multi! ds :address
+    [{:name "David" :email "david@email.com"}
+     {:name "Eve" :email "eve@email.com"}
+     {:name "Frank" :email "frank@email.com"}])
+  (sql/insert-multi! ds :address
+    [:name :email]
+    [["Grace" "grace@email.com"]
+     ["Heidi" "heidi@email.com"]
+     ["Ivan" "ivan@email.com"]]
+    {:batch true})
+  (sql/insert-multi! ds :address
+    [{:name "Judy" :email "judy@email.com"}
+     {:name "Mallory" :email "mallory@email.com"}
+     {:name "Niaj" :email "niaj@email.com"}]
+    {:batch true})
+  )
