@@ -30,4 +30,8 @@
 
   ;; sql/query
   (sql/query ds ["select * from address where name = ?" "Carlo"])
+
+  ;; sql/update!
+  (sql/update! ds :address {:email "carlo@carloacutis.com"} {:name "Carlo"})
+  (sql/update! ds :address {:email "acutis@carloacutis.com"} ["name = ?" "Carlo"])
   )
