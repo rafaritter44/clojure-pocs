@@ -48,4 +48,5 @@
   (sql/find-by-keys ds :address ["name IN (?, ?, ?)" "Alice" "Bob" "Charlie"])
   (sql/find-by-keys ds :address {:name "Carlo"} {:columns [[:email :email_alias]]})
   (sql/find-by-keys ds :address {:name "Carlo"} {:columns [["count(*)" :n]]})
+  (sql/find-by-keys ds :address :all {:order-by [:id] :offset 5 :fetch 10})
   )
