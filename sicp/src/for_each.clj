@@ -7,6 +7,11 @@
                   (for-each proc
                             (cdr list)))))
 
+(defn for-each [proc list]
+  (when-not (nil? list)
+    (proc (car list))
+    (recur proc (cdr list))))
+
 (def one-to-four
   (cons 1
         (cons 2
