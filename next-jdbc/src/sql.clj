@@ -54,4 +54,9 @@
   (sql/aggregate-by-keys ds :address "count(*)" {:name "Carlo"
                                                  :email "carlo@carloacutis.com"})
   (sql/aggregate-by-keys ds :address "count(*)" ["email LIKE ?" "%@email.com"])
+
+  ;; sql/get-by-id
+  (sql/get-by-id ds :address 1)
+  (sql/get-by-id ds :address 1 {}) ; Empty options map.
+  (sql/get-by-id ds :address 1 :id {}) ; Specify PK column name.
   )
