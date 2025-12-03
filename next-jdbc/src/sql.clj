@@ -49,4 +49,9 @@
   (sql/find-by-keys ds :address {:name "Carlo"} {:columns [[:email :email_alias]]})
   (sql/find-by-keys ds :address {:name "Carlo"} {:columns [["count(*)" :n]]})
   (sql/find-by-keys ds :address :all {:order-by [:id] :offset 5 :fetch 10})
+
+  ;; sql/aggregate-by-keys
+  (sql/aggregate-by-keys ds :address "count(*)" {:name "Carlo"
+                                                 :email "carlo@carloacutis.com"})
+  (sql/aggregate-by-keys ds :address "count(*)" ["email LIKE ?" "%@email.com"])
   )
