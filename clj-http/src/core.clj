@@ -1,5 +1,6 @@
 (ns core
-  (:require [clj-http.client :as client]))
+  (:require [clj-http.client :as client]
+            [clj-http.conn-mgr :as conn-mgr]))
 
 (def base-url "https://openholidaysapi.org/")
 (def default-opts {:accept :json
@@ -32,4 +33,13 @@
   (get "NonExistentEndpoint" {:throw-exceptions false})
   (get-async "Countries")
   (get-async "NonExistentEndpoint")
+  (let [cm             (conn-mgr/make-reusable-conn-manager {})
+        print-response (fn [path]
+                         (->> {:connection-manager cm}
+                              (get path)
+                              :body
+                              (println "Response:")))]
+    (print-response "Countries")
+    (print-response "Languages")
+    (conn-mgr/shutdown-manager cm))
   )
