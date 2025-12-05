@@ -29,6 +29,7 @@
                        "languageIsoCode" "PT"
                        "validFrom"       "2025-01-01"
                        "validTo"         "2025-12-31"}})
+  (get "NonExistentEndpoint" {:throw-exceptions false})
   (get-async "Countries")
   (get-async "NonExistentEndpoint")
   )
