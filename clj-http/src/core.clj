@@ -2,7 +2,8 @@
   (:require [clj-http.client :as client]))
 
 (def base-url "https://openholidaysapi.org/")
-(def default-opts {:accept :json})
+(def default-opts {:accept :json
+                   :as     :json})
 
 (defn- path->url [path]
   (str base-url path))
