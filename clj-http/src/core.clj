@@ -14,11 +14,11 @@
    (client/get (path->url path)
                (merge default-opts opts))))
 
-(defn get-async [path callback error-callback]
+(defn get-async [path]
   (client/get (path->url path)
               (merge default-opts {:async? true})
-              callback
-              error-callback))
+              (fn [response] (println "Success:" (:body response)))
+              (fn [exception] (println "Error:" (.getMessage exception)))))
 
 (comment
   (get "Countries")
@@ -28,10 +28,6 @@
                        "languageIsoCode" "PT"
                        "validFrom"       "2025-01-01"
                        "validTo"         "2025-12-31"}})
-  (get-async "Countries"
-             (fn [response] (println "Success:" (:body response)))
-             (fn [exception] (println "Error:" (.getMessage exception))))
-  (get-async "NonExistentEndpoint"
-             (fn [response] (println "Success:" (:body response)))
-             (fn [exception] (println "Error:" (.getMessage exception))))
+  (get-async "Countries")
+  (get-async "NonExistentEndpoint")
   )
