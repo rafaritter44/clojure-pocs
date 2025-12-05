@@ -7,19 +7,31 @@
 (defn- path->url [path]
   (str base-url path))
 
-(defn path->response
+(defn get
   ([path]
-   (path->response path {}))
+   (get path {}))
   ([path opts]
    (client/get (path->url path)
                (merge default-opts opts))))
 
+(defn get-async [path callback error-callback]
+  (client/get (path->url path)
+              (merge default-opts {:async? true})
+              callback
+              error-callback))
+
 (comment
-  (path->response "Countries")
-  (path->response "Languages")
-  (path->response "PublicHolidays"
-                  {:query-params {"countryIsoCode"  "BR"
-                                  "languageIsoCode" "PT"
-                                  "validFrom"       "2025-01-01"
-                                  "validTo"         "2025-12-31"}})
+  (get "Countries")
+  (get "Languages")
+  (get "PublicHolidays"
+       {:query-params {"countryIsoCode"  "BR"
+                       "languageIsoCode" "PT"
+                       "validFrom"       "2025-01-01"
+                       "validTo"         "2025-12-31"}})
+  (get-async "Countries"
+             (fn [response] (println "Success:" (:body response)))
+             (fn [exception] (println "Error:" (.getMessage exception))))
+  (get-async "NonExistentEndpoint"
+             (fn [response] (println "Success:" (:body response)))
+             (fn [exception] (println "Error:" (.getMessage exception))))
   )
