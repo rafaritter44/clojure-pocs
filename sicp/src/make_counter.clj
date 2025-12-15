@@ -3,7 +3,7 @@
 (defn make-counter [n]
   (let [n (atom n)]
     (fn []
-      (swap! n inc)
+      (reset! n (inc @n))
       @n)))
 
 (defn make-counter [n]
