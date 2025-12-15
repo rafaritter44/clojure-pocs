@@ -39,10 +39,6 @@
 (def cddr (comp cdr cdr))
 
 (comment
-  (def a (cons 37 49))
-  (car a)
-  (cdr a)
-
   (def a (cons 1 2))
   (def b (cons a a))
   (car a)
