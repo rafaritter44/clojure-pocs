@@ -70,3 +70,15 @@
    (filter
     odd?
     (map fib (enum-interval 1 n)))))
+
+(defn flatten [st-of-st]
+  (accumulate append-streams
+              the-empty-stream
+              st-of-st))
+
+(defn flatmap [f s]
+  (flatten (map f s)))
+
+;; Given n, find all pairs 0 < j < i <= n
+;; such that i + j is prime.
+(defn prime-sum-pairs [n])
