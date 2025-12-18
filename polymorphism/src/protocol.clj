@@ -1,4 +1,4 @@
-(ns core)
+(ns protocol)
 
 (defprotocol Greeter
   "A protocol for greeting people in a specific language."
