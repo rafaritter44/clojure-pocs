@@ -1,4 +1,4 @@
-(ns core)
+(ns future)
 
 ;; future
 (def f (future
@@ -17,5 +17,4 @@
   (realized? f)
 
   ;; future-cancel
-  (future-cancel f)
-  )
+  (future-cancel f))

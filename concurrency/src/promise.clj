@@ -1,4 +1,4 @@
-(ns core)
+(ns promise)
 
 ;; promise
 (def p (promise))
@@ -9,5 +9,4 @@
     (deref p))
 
   ;; deliver
-  (deliver p 7)
-  )
+  (deliver p 7))

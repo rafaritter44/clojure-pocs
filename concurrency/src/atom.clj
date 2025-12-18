@@ -1,4 +1,4 @@
-(ns core)
+(ns atom)
 
 ;; atom
 (def counter (atom 0))
@@ -27,5 +27,4 @@
   (add-watch counter :watcher
              (fn [key atom old-state new-state]
                (println "Counter changed from" old-state "to" new-state)))
-  (remove-watch counter :watcher)
-  )
+  (remove-watch counter :watcher))
