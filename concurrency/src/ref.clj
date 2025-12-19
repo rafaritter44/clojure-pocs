@@ -13,6 +13,8 @@
 
 (defn transfer [from from-type to to-type amount]
   (dosync
+   (ensure (:checking from))
+   (ensure (:savings from))
    (alter (from-type from) - amount)
    (when (< (+ @(:checking from) @(:savings from)) 50M)
      (throw (Exception. "Combined balance too low")))
