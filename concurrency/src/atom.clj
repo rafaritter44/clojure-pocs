@@ -24,7 +24,7 @@
   (reset! counter -1)
 
   ;; add-watch
-  (add-watch counter :watcher
+  (add-watch counter :watch
              (fn [key atom old-state new-state]
                (println "Counter changed from" old-state "to" new-state)))
-  (remove-watch counter :watcher))
+  (remove-watch counter :watch))
