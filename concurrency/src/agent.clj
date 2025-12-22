@@ -1,16 +1,16 @@
 (ns agent)
 
-(defn ->agent []
+(defn ->agent [error-mode]
   (agent 0
          :validator (every-pred number? (complement neg?))
          :error-handler (fn [a e] (println {:agent @a :error (.getMessage e)}))
-         :error-mode :continue))
+         :error-mode error-mode))
 
 (defn watch [key agent old-state new-state]
   (println "Counter changed from" old-state "to" new-state))
 
-(def a1 (->agent))
-(def a2 (->agent))
+(def a1 (->agent :continue))
+(def a2 (->agent :fail))
 
 (comment
   ;; deref
