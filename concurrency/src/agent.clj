@@ -1,13 +1,16 @@
 (ns agent)
 
 ;; agent
-(defn ->agent [error-mode]
-  (agent 0
-         :validator (every-pred number? (complement neg?))
-         :error-handler (fn [a e] (println {:agent @a :error (.getMessage e)}))
-         :error-mode error-mode))
-(def a1 (->agent :continue))
-(def a2 (->agent :fail))
+(defn ->agent
+  ([]
+   (->agent nil))
+  ([error-mode]
+   (agent 10
+          :validator (every-pred number? (complement neg?))
+          :error-handler (fn [a e] (println {:agent @a :error (.getMessage e)}))
+          :error-mode error-mode)))
+(def a1 (->agent))
+(def a2 (->agent))
 (def a3 (->agent :continue))
 (def a4 (->agent :fail))
 (def agents [a1 a2 a3 a4])
@@ -29,19 +32,20 @@
   (letfn [(action [state]
             (println "Agent" *agent*)
             (Thread/sleep 10000)
-            (inc state))]
+            (dec state))]
     (send-off a2 #(do (send-off a3 action)
                       (send-off a4 action)
                       (println "Released" (release-pending-sends))
                       (action %))))
+  (send a2 (constantly 10))
 
   ;; await
   (apply await agents)
   (apply await-for 10000 agents)
 
   ;; restart-agent
-  (restart-agent a1 0)
-  (restart-agent a2 0)
+  (restart-agent a4 10)
+  (restart-agent a4 10 :clear-actions true)
 
   ;; shutdown-agents
   (shutdown-agents)
