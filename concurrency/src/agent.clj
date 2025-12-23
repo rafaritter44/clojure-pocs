@@ -10,6 +10,14 @@
 (def a2 (->agent :fail))
 
 (comment
+  ;; add-watch
+  (letfn [(watch [key agent old-state new-state]
+                 (println "Counter changed from" old-state "to" new-state))]
+    (add-watch a1 :watch watch)
+    (add-watch a2 :watch watch))
+  (remove-watch a1 :watch)
+  (remove-watch a2 :watch)
+
   ;; deref
   (deref a1)
   @a2
@@ -22,14 +30,6 @@
   ;; await
   (await a1 a2)
   (await-for 10000 a1 a2)
-
-  ;; add-watch
-  (letfn [(watch [key agent old-state new-state]
-                 (println "Counter changed from" old-state "to" new-state))]
-    (add-watch a1 :watch watch)
-    (add-watch a2 :watch watch))
-  (remove-watch a1 :watch)
-  (remove-watch a2 :watch)
 
   ;; restart-agent
   (restart-agent a1 0)
