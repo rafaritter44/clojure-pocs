@@ -24,7 +24,8 @@
 
   ;; send
   (send a1 #(nth (iterate inc %) 1000000000))
-  (send-off a2 #(do (Thread/sleep 10000)
+  (send-off a2 #(do (println "Agent" *agent*)
+                    (Thread/sleep 10000)
                     (inc %)))
 
   ;; await
@@ -37,9 +38,6 @@
 
   ;; shutdown-agents
   (shutdown-agents)
-
-  ;; *agent*
-  *agent*
 
   ;; release-pending-sends
   (release-pending-sends)
