@@ -8,29 +8,36 @@
          :error-mode error-mode))
 (def a1 (->agent :continue))
 (def a2 (->agent :fail))
+(def a3 (->agent :continue))
+(def a4 (->agent :fail))
+(def agents [a1 a2 a3 a4])
 
 (comment
   ;; add-watch
   (letfn [(watch [key agent old-state new-state]
-                 (println "Counter changed from" old-state "to" new-state))]
-    (add-watch a1 :watch watch)
-    (add-watch a2 :watch watch))
-  (remove-watch a1 :watch)
-  (remove-watch a2 :watch)
+            (println "Counter changed from" old-state "to" new-state))]
+    (doseq [a agents]
+      (add-watch a :watch watch)))
+  (doseq [a agents]
+    (remove-watch a :watch))
 
   ;; deref
-  (deref a1)
-  @a2
+  (map deref agents)
 
   ;; send
   (send a1 #(nth (iterate inc %) 1000000000))
-  (send-off a2 #(do (println "Agent" *agent*)
-                    (Thread/sleep 10000)
-                    (inc %)))
+  (letfn [(action [state]
+            (println "Agent" *agent*)
+            (Thread/sleep 10000)
+            (inc state))]
+    (send-off a2 #(do (send-off a3 action)
+                      (send-off a4 action)
+                      (println "Released" (release-pending-sends))
+                      (action %))))
 
   ;; await
-  (await a1 a2)
-  (await-for 10000 a1 a2)
+  (apply await agents)
+  (apply await-for 10000 agents)
 
   ;; restart-agent
   (restart-agent a1 0)
@@ -38,7 +45,4 @@
 
   ;; shutdown-agents
   (shutdown-agents)
-
-  ;; release-pending-sends
-  (release-pending-sends)
   )
