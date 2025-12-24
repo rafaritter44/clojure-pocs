@@ -38,3 +38,7 @@
   (stop [this]
     (println "Stopping example component...")
     this))
+
+(defn example-component [config-options]
+  (map->ExampleComponent {:options config-options
+                          :cache (atom {})}))
