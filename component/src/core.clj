@@ -42,3 +42,15 @@
 (defn example-component [config-options]
   (map->ExampleComponent {:options config-options
                           :cache (atom {})}))
+
+(def new-scheduler (constantly nil))
+
+(defn example-system [config-options]
+  (let [{:keys [host port]} config-options]
+    (component/system-map
+     :db (new-database host port)
+     :scheduler (new-scheduler)
+     :app (component/using
+           (example-component config-options)
+           {:database  :db
+            :scheduler :scheduler}))))
