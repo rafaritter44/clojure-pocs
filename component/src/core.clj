@@ -14,3 +14,6 @@
     (.close connection)
     ;; If you dissoc one of the base fields from a record, you get a plain map.
     (assoc component :connection nil)))
+
+(defn new-database [host port]
+  (map->Database {:host host :port port}))
