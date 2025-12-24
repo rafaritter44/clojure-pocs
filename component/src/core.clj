@@ -29,3 +29,12 @@
   (execute-insert (:connection database)
                   "INSERT INTO users (username, email)"
                   username email))
+
+(defrecord ExampleComponent [options cache database scheduler]
+  component/Lifecycle
+  (start [this]
+    (println "Starting example component...")
+    (assoc this :admin (get-user database "admin")))
+  (stop [this]
+    (println "Stopping example component...")
+    this))
