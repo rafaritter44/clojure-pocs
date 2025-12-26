@@ -55,13 +55,22 @@
              (example-component config-options)
              {:database  :db
               :scheduler :scheduler}))))
+
+  (defn example-system [config-options]
+    (let [{:keys [host port]} config-options]
+      (component/system-map
+       :database (new-database host port)
+       :scheduler (new-scheduler)
+       :app (component/using
+             (example-component config-options)
+             [:database :scheduler]))))
   )
 
 (defn example-system [config-options]
   (let [{:keys [host port]} config-options]
-    (component/system-map
-     :database (new-database host port)
-     :scheduler (new-scheduler)
-     :app (component/using
-           (example-component config-options)
-           [:database :scheduler]))))
+    (-> (component/system-map
+         :database (new-database host port)
+         :scheduler (new-scheduler)
+         :app (example-component config-options))
+        (component/system-using
+         {:app [:database :scheduler]}))))
