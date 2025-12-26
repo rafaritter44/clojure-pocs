@@ -82,8 +82,17 @@
 
 (def system (example-system {:host "dbhost.com" :port 5432}))
 
+(defn use-app [app-component]
+  (let [db       (:database app-component)
+        username "Rafael"
+        email    "rafael@ritter.com"]
+    (add-user db username email)
+    (get-user db username)))
+
 (comment
   system
   (alter-var-root #'system component/start)
   (alter-var-root #'system component/stop)
+
+  (use-app (:app system))
   )
