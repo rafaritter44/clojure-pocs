@@ -1,7 +1,12 @@
 (ns core
-  (:require [com.stuartsierra.component :as component]))
+  (:require [com.stuartsierra.component :as component])
+  (:import [java.lang AutoCloseable]))
 
-(def connect-to-database (constantly "Connection"))
+(def connect-to-database
+  (constantly
+   (reify AutoCloseable
+     (close [connection]
+       (println "Closing" connection)))))
 
 (defrecord Database [host port connection]
   component/Lifecycle
