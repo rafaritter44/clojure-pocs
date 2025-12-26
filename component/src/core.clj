@@ -45,12 +45,23 @@
 
 (def new-scheduler (constantly nil))
 
+(comment
+  (defn example-system [config-options]
+    (let [{:keys [host port]} config-options]
+      (component/system-map
+       :db (new-database host port)
+       :scheduler (new-scheduler)
+       :app (component/using
+             (example-component config-options)
+             {:database  :db
+              :scheduler :scheduler}))))
+  )
+
 (defn example-system [config-options]
   (let [{:keys [host port]} config-options]
     (component/system-map
-     :db (new-database host port)
+     :database (new-database host port)
      :scheduler (new-scheduler)
      :app (component/using
            (example-component config-options)
-           {:database  :db
-            :scheduler :scheduler}))))
+           [:database :scheduler]))))
