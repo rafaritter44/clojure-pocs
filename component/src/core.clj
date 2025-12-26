@@ -43,7 +43,7 @@
   (map->ExampleComponent {:options config-options
                           :cache (atom {})}))
 
-(def new-scheduler (constantly nil))
+(def new-scheduler (constantly "Scheduler"))
 
 (comment
   (defn example-system [config-options]
@@ -74,3 +74,11 @@
          :app (example-component config-options))
         (component/system-using
          {:app [:database :scheduler]}))))
+
+(def system (example-system {:host "dbhost.com" :port 5432}))
+
+(comment
+  system
+  (alter-var-root #'system component/start)
+  (alter-var-root #'system component/stop)
+  )
