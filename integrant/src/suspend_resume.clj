@@ -71,3 +71,16 @@
     (println (handler))
     (ig/halt! new-system))
   )
+
+;; ig/resolve-key
+(defmethod ig/resolve-key :adapter/jetty
+  [_ server]
+  (select-keys server [:port :handler]))
+(defmethod ig/init-key :app/test
+  [_ {:keys [server]}]
+  server)
+(comment
+  (let [config (assoc config :app/test {:server (ig/ref :adapter/jetty)})
+        system (ig/init config)]
+    (:app/test system))
+  )
