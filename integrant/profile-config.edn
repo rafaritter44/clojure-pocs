@@ -1,0 +1,2 @@
+{:adapter/jetty {:port #ig/profile {:dev  8080
+                                    :prod 80}}}
