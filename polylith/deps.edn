@@ -1,9 +1,11 @@
 {:aliases  {:dev {:extra-paths ["development/src"]
 
                   :extra-deps  {org.clojure/clojure {:mvn/version "1.12.2"}
+                                poly/cli            {:local/root "bases/cli"}
                                 poly/user           {:local/root "components/user"}}}
 
-            :test {:extra-paths ["components/user/test"]}
+            :test {:extra-paths ["bases/cli/test"
+                                 "components/user/test"]}
 
             :poly {:main-opts ["-m" "polylith.clj.core.poly-cli.core"]
                    :jvm-opts ["--enable-native-access=ALL-UNNAMED"]
