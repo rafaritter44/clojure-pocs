@@ -10,4 +10,16 @@ You can also get in touch with the Polylith Team on [Slack](https://clojurians.s
 
 <h1>polylith</h1>
 
-<p>Add your workspace documentation here...</p>
+Building and running the CLI:
+
+```
+clojure -T:build uberjar :project command-line
+cd projects/command-line/target
+java -jar command-line.jar World
+```
+
+Output:
+
+```
+Hello, World!
+```
