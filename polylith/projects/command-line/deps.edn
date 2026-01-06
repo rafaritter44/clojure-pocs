@@ -2,5 +2,6 @@
         poly/cli            {:local/root "../../bases/cli"}
         poly/user           {:local/root "../../components/user"}}
 
- :aliases {:test {:extra-paths []
-                  :extra-deps  {}}}}
+ :aliases {:test    {:extra-paths []
+                     :extra-deps  {}}
+           :uberjar {:main se.example.cli.core}}}
