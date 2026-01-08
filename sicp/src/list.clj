@@ -2,6 +2,11 @@
   (:require [cons :refer [cons]]
             [for-each :refer [for-each]]))
 
+(comment
+  (defn list [& items]
+    items)
+  )
+
 (defn list [& items]
   (if (empty? items)
     nil
