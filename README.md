@@ -6,3 +6,4 @@ Other POC ideas:
 3. babashka
 4. HTTP router (metosin/reitit)
 5. Resume Malli POCs from here: https://github.com/metosin/malli?tab=readme-ov-file#error-messages
+6. Typed Clojure
