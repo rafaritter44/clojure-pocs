@@ -2,8 +2,9 @@
 
 Other POC ideas:
 1. Tests (clojure.test + kaocha)
-2. Configuration (juxt/aero, System/getenv)
-3. babashka
-4. HTTP router (metosin/reitit)
-5. Resume Malli POCs from here: https://github.com/metosin/malli?tab=readme-ov-file#error-messages
-6. Typed Clojure
+1. Configuration (juxt/aero, System/getenv)
+1. babashka
+1. HTTP router (metosin/reitit)
+1. Resume Malli POCs from here: https://github.com/metosin/malli?tab=readme-ov-file#error-messages
+1. Typed Clojure
+1. core.match
