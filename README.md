@@ -8,4 +8,5 @@ Other POC ideas:
 1. Resume Malli POCs from here: https://github.com/metosin/malli?tab=readme-ov-file#error-messages
 1. Typed Clojure
 1. core.match
+1. Hiccup
 1. ClojureScript
