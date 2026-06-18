@@ -30,7 +30,7 @@
                        "languageIsoCode" "PT"
                        "validFrom"       "2025-01-01"
                        "validTo"         "2025-12-31"}})
-  (get "NonExistentEndpoint" {:throw-exceptions false})
+  (get "NonExistentEndpoint" {:throw-exceptions false, :coerce :always})
   (get-async "Countries")
   (get-async "NonExistentEndpoint")
   (let [cm             (conn-mgr/make-reusable-conn-manager {})
