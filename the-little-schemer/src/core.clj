@@ -8,9 +8,10 @@
       (mk-length mk-length))
     (fn [mk-length]
       (fn [l]
-        (if (empty? l)
-          0
-          (inc ((mk-length mk-length)
-                (rest l)))))))
+        (cond
+          (empty? l) 0
+          :else (inc
+                 ((mk-length mk-length)
+                  (rest l)))))))
    '('apples))
   )
