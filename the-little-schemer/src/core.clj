@@ -1,6 +1,9 @@
 (ns core)
 
 (comment
+  ;; Recursive length without define
+
+  ;; First version
   (((fn [mk-length]
       (mk-length mk-length))
     (fn [mk-length]
